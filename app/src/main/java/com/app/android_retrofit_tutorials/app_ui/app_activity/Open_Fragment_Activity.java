@@ -51,7 +51,7 @@ public class Open_Fragment_Activity extends Base_Activity {
         Bundle bundle = new Bundle();
 
         switch (fragmentKey) {
-            case "Notification_Fragment":
+            case "GET_Method_Fragment":
                 mFragment = new GET_Method_Fragment();
                 bundle.putString("productID", "productID");
                 mFragment.setArguments(bundle);

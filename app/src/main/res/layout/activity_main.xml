@@ -8,10 +8,21 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/_10sdp"/>
 
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar"
+        android:layout_width="match_parent"
+        android:background="@color/white"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <include
+            layout="@layout/tollbar_main" />
+
+    </com.google.android.material.appbar.AppBarLayout>
 
 
     <ListView

@@ -57,7 +57,7 @@ public class MainActivity extends Base_Activity {
         switch (strOperations) {
             case "GET METHOD":
                 startActivity(new Intent(this, Open_Fragment_Activity.class)
-                        .putExtra("fragmentKey", "Notification_Fragment"));
+                        .putExtra("fragmentKey", "GET_Method_Fragment"));
                 break;
         }
     }

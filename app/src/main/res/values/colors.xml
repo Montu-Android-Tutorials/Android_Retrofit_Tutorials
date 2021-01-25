@@ -7,8 +7,9 @@
     <color name="colorAccent">#053bc1</color>
 
 
-    <color name="logo_colo_light">#053bc1</color>
-    <color name="logo_colo_dark">#053bc1</color>
+    <color name="logo_colo_light">#A5C138</color>
+    <color name="logo_colo_dark">#4caf50</color>
+    <color name="logo_colo_accent">#81c784</color>
 
 
     <color name="appBackGround">#CABBBBBB</color>
