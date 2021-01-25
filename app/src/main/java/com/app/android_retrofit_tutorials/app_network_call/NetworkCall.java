@@ -8,10 +8,8 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.app.smsipltest.model.Resp_testAPI;
-import com.google.gson.JsonObject;
-
-import org.json.JSONObject;
+import com.app.android_retrofit_tutorials.app_constants.Web_Contants;
+import com.app.android_retrofit_tutorials.app_model.Resp_get_All_Notification_for_EveryOne;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -29,9 +27,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 
 /**
- * Created by Manish Ahire
+ * Created by Manish Ahire on 22,January,2021,
+ * manishahire.ahire221@gmail.com.
  */
-
 public class NetworkCall {
 
     private Activity mActivity;
@@ -88,74 +86,39 @@ public class NetworkCall {
     }
 
 
-/*
-    public void testAPI(String key, String auth_key, String password) {
-        if (isNetworkAvailable()) {
-            try {
-                Retrofit mRetrofit = new Retrofit.Builder()
-                        .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                        .client(initHttpClient().build())
-                        .baseUrl("https://www.smsipl.com/")
-                        .addConverterFactory(GsonConverterFactory.create())
-                        .build();
+    public void get_All_Notification_for_EveryOne(String id, String key, int limit, int skip) {
+        try {
+            Retrofit mRetrofit = new Retrofit.Builder()
+                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                    .client(initHttpClient().build())
+                    .baseUrl(Web_Contants._baseURl)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
 
-                NetworkServiceApi serviceApi = mRetrofit.create(NetworkServiceApi.class);
-                Call<Resp_testAPI> call = serviceApi.testAPI(key, auth_key, password);
-                call.enqueue(new Callback<Resp_testAPI>() {
-                    @Override
-                    public void onResponse(@NonNull Call<Resp_testAPI> call, @NonNull Response<Resp_testAPI> response) {
+            NetworkServiceApi serviceApi = mRetrofit.create(NetworkServiceApi.class);
+            Call<Resp_get_All_Notification_for_EveryOne> call = serviceApi.get_All_Notification_for_EveryOne(key, id, key, limit, skip);
+            call.enqueue(new Callback<Resp_get_All_Notification_for_EveryOne>() {
+                @Override
+                public void onResponse(@NonNull Call<Resp_get_All_Notification_for_EveryOne> call, @NonNull Response<Resp_get_All_Notification_for_EveryOne> response) {
+
+                    if (response.code() == 200)
                         mNotifier.notifySuccess(response);
-                    }
+                    else
+                        mNotifier.notifyString("Something Went Wrong Please Try Again....!!!");
 
-                    @Override
-                    public void onFailure(@NonNull Call<Resp_testAPI> call, @NonNull Throwable t) {
-                        Log.e("API_Error  ", "Error  Resp_testAPI->" + t.getMessage());
+                }
 
-                        mNotifier.notifyError(t);
-                    }
-                });
-            } catch (Exception e) {
-                Log.e("Error-->", "Resp_testAPI->" + e.getMessage());
-                e.printStackTrace();
-            }
-        } else {
-            mNotifier.notifyNoInternet();
-        }
-    }
-*/
+                @Override
+                public void onFailure(@NonNull Call<Resp_get_All_Notification_for_EveryOne> call, @NonNull Throwable t) {
+                    Log.e("API_Error  ", "Error Resp_get_All_Notification_for_EveryOne " + t.getMessage());
 
+                    mNotifier.notifyError(t);
+                }
+            });
+        } catch (Exception e) {
+            Log.e("JSSOOONNN  ", "Error Resp_get_All_Notification_for_EveryOne " + e.getMessage());
 
-    public void testAPI(String key, String auth_key, String password) {
-        if (isNetworkAvailable()) {
-            try {
-                Retrofit mRetrofit = new Retrofit.Builder()
-                        .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                        .client(initHttpClient().build())
-                        .baseUrl("https://www.smsipl.com/")
-                        .addConverterFactory(GsonConverterFactory.create())
-                        .build();
-
-                NetworkServiceApi serviceApi = mRetrofit.create(NetworkServiceApi.class);
-                Call<JsonObject> call = serviceApi.testAPI(key, auth_key, password);
-                call.enqueue(new Callback<JsonObject>() {
-                    @Override
-                    public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
-                        mNotifier.notifySuccess(response.body());
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Call<JsonObject> call, @NonNull Throwable t) {
-                        Log.e("API_Error  ", "Error  Resp_testAPI->" + t.getMessage());
-
-                        mNotifier.notifyError(t);
-                    }
-                });
-            } catch (Exception e) {
-                Log.e("Error-->", "Resp_testAPI->" + e.getMessage());
-                e.printStackTrace();
-            }
-        } else {
-            mNotifier.notifyNoInternet();
+            e.printStackTrace();
         }
     }
 

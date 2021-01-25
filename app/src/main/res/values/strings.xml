@@ -1,3 +1,18 @@
 <resources>
     <string name="app_name">Android_Retrofit_Tutorials</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+    <string name="alert">Alert</string>
+    <string name="error">Error</string>
+    <string name="success">Success</string>
+
+    <string name="no_data_found">No Data Found...!</string>
+    <string name="no_internet">Internet Not Available</string>
+    <string name="something_went_wrong">Something Went Wrong Please Try Again Later</string>
+
+
+    <string name="please_wait">Please Wait...!</string>
+
 </resources>

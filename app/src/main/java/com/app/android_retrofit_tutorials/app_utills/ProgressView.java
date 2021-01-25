@@ -1,4 +1,4 @@
-package com.app.android_retrofit_tutorials.app_constants;
+package com.app.android_retrofit_tutorials.app_utills;
 
 import android.app.ProgressDialog;
 import android.content.Context;

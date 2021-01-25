@@ -5,4 +5,7 @@ package com.app.android_retrofit_tutorials.app_constants;
  * manishahire.ahire221@gmail.com.
  */
 public class Web_Contants {
+
+    public static String _baseURl = "https://api.dryomix.com/api/";
+
 }
