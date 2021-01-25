@@ -1,38 +1,66 @@
 package com.app.android_retrofit_tutorials;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import com.app.android_retrofit_tutorials.app_base.Base_Activity;
 import com.app.android_retrofit_tutorials.app_ui.app_activity.Open_Fragment_Activity;
 import com.google.android.material.button.MaterialButton;
 
-public class MainActivity extends Base_Activity implements View.OnClickListener {
+import java.util.ArrayList;
 
-    private MaterialButton mOpenRecyclerView;
+public class MainActivity extends Base_Activity {
+
+    private ListView mLvRecyclerOptions;
+    private  ArrayList<String> optionString = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initView();
-
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.openRecyclerView:
-                startActivity(new Intent(this, Open_Fragment_Activity.class)
-                .putExtra("fragmentKey", "Notification_Fragment"));
-                break;
-        }
-
     }
 
     private void initView() {
-        mOpenRecyclerView = findViewById(R.id.openRecyclerView);
-        mOpenRecyclerView.setOnClickListener(this);
+        mLvRecyclerOptions = findViewById(R.id.lvRecyclerOptions);
+        addRecyclerViewOptions();
+
+        mLvRecyclerOptions.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                openFragmentByOpr(optionString.get(position).toString().trim());
+            }
+        });
+
     }
+
+    private void addRecyclerViewOptions() {
+        ArrayAdapter adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, optionString);
+        optionString.clear();
+        optionString.add("GET METHOD");
+        optionString.add("POST METHOD");
+        optionString.add("PUT METHOD");
+        optionString.add("DELETE METHOD");
+        optionString.add("GET METHOD with PARAMETER");
+        optionString.add("MULTIPART METHOD");
+        mLvRecyclerOptions.setAdapter(adapter);
+    }
+
+
+
+    private void openFragmentByOpr(String strOperations) {
+        switch (strOperations) {
+            case "GET METHOD":
+                startActivity(new Intent(this, Open_Fragment_Activity.class)
+                        .putExtra("fragmentKey", "Notification_Fragment"));
+                break;
+        }
+    }
+
+
 }

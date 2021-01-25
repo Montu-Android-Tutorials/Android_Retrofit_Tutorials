@@ -1,6 +1,5 @@
 package com.app.android_retrofit_tutorials.app_ui.app_activity;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
@@ -11,7 +10,7 @@ import android.widget.FrameLayout;
 
 import com.app.android_retrofit_tutorials.R;
 import com.app.android_retrofit_tutorials.app_base.Base_Activity;
-import com.app.android_retrofit_tutorials.app_ui.app_fragment.Notification_Fragment;
+import com.app.android_retrofit_tutorials.app_ui.app_fragment.GET_Method_Fragment;
 import com.google.android.material.appbar.AppBarLayout;
 
 public class Open_Fragment_Activity extends Base_Activity {
@@ -47,6 +46,24 @@ public class Open_Fragment_Activity extends Base_Activity {
     }
 
 
+
+    private void openFragmentByKey(String fragmentKey) {
+        Bundle bundle = new Bundle();
+
+        switch (fragmentKey) {
+            case "Notification_Fragment":
+                mFragment = new GET_Method_Fragment();
+                bundle.putString("productID", "productID");
+                mFragment.setArguments(bundle);
+                setFragment(R.id.fragment_container, mFragment, false);
+                break;
+
+
+        }
+    }
+
+
+
     private void setUpTollBar(Toolbar mToolbar) {
         setSupportActionBar(mToolbar);
         // add back arrow to toolbar
@@ -69,20 +86,5 @@ public class Open_Fragment_Activity extends Base_Activity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-    }
-
-    private void openFragmentByKey(String fragmentKey) {
-        Bundle bundle = new Bundle();
-
-        switch (fragmentKey) {
-            case "Notification_Fragment":
-                mFragment = new Notification_Fragment();
-                bundle.putString("productID", "productID");
-                mFragment.setArguments(bundle);
-                setFragment(R.id.fragment_container, mFragment, false);
-                break;
-
-
-        }
     }
 }

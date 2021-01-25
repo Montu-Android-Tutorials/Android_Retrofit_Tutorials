@@ -18,9 +18,9 @@ import com.google.android.material.textview.MaterialTextView;
 
 import java.util.List;
 
-public class Adapter_All_Notifications extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class Adapter_GET_Method extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    public String TAG = Adapter_All_Notifications.class.getSimpleName();
+    public String TAG = Adapter_GET_Method.class.getSimpleName();
 
     private List<Resp_get_All_Notification_for_EveryOne.ResultEntity> resultEntities;
     private Context mContext;
@@ -29,8 +29,8 @@ public class Adapter_All_Notifications extends RecyclerView.Adapter<RecyclerView
 
     OpenNotificationId openNotificationId;
 
-    public Adapter_All_Notifications(Context context, List<Resp_get_All_Notification_for_EveryOne.ResultEntity> resultEntities,
-                                     OpenNotificationId openNotificationId) {
+    public Adapter_GET_Method(Context context, List<Resp_get_All_Notification_for_EveryOne.ResultEntity> resultEntities,
+                              OpenNotificationId openNotificationId) {
         this.resultEntities = resultEntities;
         this.mContext = context;
         this.openNotificationId = openNotificationId;

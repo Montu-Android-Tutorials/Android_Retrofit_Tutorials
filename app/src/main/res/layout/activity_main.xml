@@ -8,16 +8,16 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-
     <Space
         android:layout_width="match_parent"
         android:layout_height="@dimen/_10sdp"/>
 
-    <com.google.android.material.button.MaterialButton
-        android:layout_width="match_parent"
-        android:text="Recycler Example"
-        android:id="@+id/openRecyclerView"
-        android:layout_height="@dimen/_40sdp"/>
+
+
+    <ListView
+        android:id="@+id/lvRecyclerOptions"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" />
 
 
 </androidx.appcompat.widget.LinearLayoutCompat>

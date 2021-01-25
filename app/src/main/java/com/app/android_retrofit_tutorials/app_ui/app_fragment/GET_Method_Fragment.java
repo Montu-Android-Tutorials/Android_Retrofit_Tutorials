@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.android_retrofit_tutorials.R;
-import com.app.android_retrofit_tutorials.app_adapter.Adapter_All_Notifications;
+import com.app.android_retrofit_tutorials.app_adapter.Adapter_GET_Method;
 import com.app.android_retrofit_tutorials.app_base.Base_Fragment;
 import com.app.android_retrofit_tutorials.app_constants.Preference_Manager;
 import com.app.android_retrofit_tutorials.app_model.Resp_get_All_Notification_for_EveryOne;
@@ -31,12 +31,12 @@ import java.util.ArrayList;
 import retrofit2.Response;
 
 
-public class Notification_Fragment extends Base_Fragment implements RequestNotifier, Adapter_All_Notifications.OpenNotificationId {
+public class GET_Method_Fragment extends Base_Fragment implements RequestNotifier, Adapter_GET_Method.OpenNotificationId {
 
 
     private final int pageSize = 10;
 
-    private String TAG = Notification_Fragment.class.getSimpleName();
+    private String TAG = GET_Method_Fragment.class.getSimpleName();
     private int cardPosition;
     private Preference_Manager preference_manager;
     private NetworkCall networkCall;
@@ -56,10 +56,10 @@ public class Notification_Fragment extends Base_Fragment implements RequestNotif
 
 
     private ArrayList<Resp_get_All_Notification_for_EveryOne.ResultEntity> resultEntityArrayList = new ArrayList<>();
-    private Adapter_All_Notifications adapter_all_notifications;
+    private Adapter_GET_Method adapter_GETExample;
 
 
-    public Notification_Fragment() {
+    public GET_Method_Fragment() {
         // Required empty public constructor
     }
 
@@ -68,7 +68,7 @@ public class Notification_Fragment extends Base_Fragment implements RequestNotif
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_notification, container, false);
+        View view = inflater.inflate(R.layout.fragment_get_method, container, false);
         initView(view);
         return view;
     }
@@ -83,7 +83,7 @@ public class Notification_Fragment extends Base_Fragment implements RequestNotif
 
 
         if (((AppCompatActivity) getActivity()).getSupportActionBar() != null)
-            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Notifications");
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("GET METHOD");
 
 
         mIsLoading = false;
@@ -133,7 +133,7 @@ public class Notification_Fragment extends Base_Fragment implements RequestNotif
 
 
         // load the first page
-        adapter_all_notifications.getList().clear();
+        adapter_GETExample.getList().clear();
         callAPI(true, skipPage);
 
 
@@ -157,8 +157,8 @@ public class Notification_Fragment extends Base_Fragment implements RequestNotif
 //        mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
 //        mRecyclerView.setLayoutManager(new GridLayoutManager(context, 4));
 
-        adapter_all_notifications = new Adapter_All_Notifications(getContext(), resultEntityArrayList, this);
-        mRecyclerView.setAdapter(adapter_all_notifications);
+        adapter_GETExample = new Adapter_GET_Method(getContext(), resultEntityArrayList, this);
+        mRecyclerView.setAdapter(adapter_GETExample);
     }
 
     @Override
@@ -194,9 +194,9 @@ public class Notification_Fragment extends Base_Fragment implements RequestNotif
                             }
 
                             if (isFirstPage) {
-                                adapter_all_notifications.setList(resultEntityArrayList);
+                                adapter_GETExample.setList(resultEntityArrayList);
                             } else {
-                                adapter_all_notifications.addAll(resultEntityArrayList);
+                                adapter_GETExample.addAll(resultEntityArrayList);
                             }
 
 
