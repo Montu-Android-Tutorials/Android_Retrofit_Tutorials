@@ -43,10 +43,11 @@ public class MainActivity extends Base_Activity {
         ArrayAdapter adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, optionString);
         optionString.clear();
         optionString.add("GET METHOD");
+        optionString.add("GET METHOD with PARAMETER");
         optionString.add("POST METHOD");
         optionString.add("PUT METHOD");
         optionString.add("DELETE METHOD");
-        optionString.add("GET METHOD with PARAMETER");
+        optionString.add("PATCH METHOD");
         optionString.add("MULTIPART METHOD");
         mLvRecyclerOptions.setAdapter(adapter);
     }

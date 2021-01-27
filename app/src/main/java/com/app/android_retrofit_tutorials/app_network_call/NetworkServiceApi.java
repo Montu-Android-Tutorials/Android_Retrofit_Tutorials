@@ -1,6 +1,7 @@
 package com.app.android_retrofit_tutorials.app_network_call;
 
 import com.app.android_retrofit_tutorials.app_model.Resp_get_All_Notification_for_EveryOne;
+import com.app.android_retrofit_tutorials.app_model.Response_getUsers;
 import com.google.gson.JsonObject;
 
 import retrofit2.Call;
@@ -18,19 +19,7 @@ import retrofit2.http.Query;
 
 public interface NetworkServiceApi {
 
-
-    //Todo @Field for add data in query
-
-    @POST("Gasco/seat-map.php")
-    @FormUrlEncoded
-    Call<JsonObject> testAPI(@Query("key") String key, @Field("auth_key") String auth_key, @Field("password") String password);
-
-
-
-
-    @GET("notifications/get_all_notification_for_everyone/{key}/{id}/{user}")
-    Call<Resp_get_All_Notification_for_EveryOne> get_All_Notification_for_EveryOne(@Path("key") String key, @Path("id") String id, @Path("user") String user,
-                                                                                   @Query("limit") int limit, @Query("skip") int skip);
-
+    @GET("users")
+    Call<Response_getUsers> getUsers();
 
 }

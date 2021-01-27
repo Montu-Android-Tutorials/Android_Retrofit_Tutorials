@@ -6,6 +6,8 @@ package com.app.android_retrofit_tutorials.app_constants;
  */
 public class Web_Contants {
 
-    public static String _baseURl = "https://api.dryomix.com/api/";
+//    public static String _baseURl = "https://api.dryomix.com/api/";
+
+    public static String _baseURl = "https://reqres.in/api/";
 
 }

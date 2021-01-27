@@ -19,8 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.app.android_retrofit_tutorials.R;
 import com.app.android_retrofit_tutorials.app_adapter.Adapter_GET_Method;
 import com.app.android_retrofit_tutorials.app_base.Base_Fragment;
-import com.app.android_retrofit_tutorials.app_constants.Preference_Manager;
-import com.app.android_retrofit_tutorials.app_model.Resp_get_All_Notification_for_EveryOne;
+import com.app.android_retrofit_tutorials.app_model.Response_getUsers;
 import com.app.android_retrofit_tutorials.app_network_call.NetworkCall;
 import com.app.android_retrofit_tutorials.app_network_call.RequestNotifier;
 import com.app.android_retrofit_tutorials.app_utills.AppAlert;
@@ -34,29 +33,17 @@ import retrofit2.Response;
 public class GET_Method_Fragment extends Base_Fragment implements RequestNotifier, Adapter_GET_Method.OpenNotificationId {
 
 
-    private final int pageSize = 10;
-
     private String TAG = GET_Method_Fragment.class.getSimpleName();
-    private int cardPosition;
-    private Preference_Manager preference_manager;
     private NetworkCall networkCall;
     private Context mContext;
-    private boolean mIsLoading = false;
-    private boolean mIsLastPage = false;
-    private int mCurrentPage = 0;
-    private Boolean isFirstPage;
-    private int loadPage = 10;
-    private int skipPage = 0;
-    //    private ShimmerFrameLayout mShimmerViewContainer;
+
     private LinearLayout mMainLay;
     private RecyclerView mRecyclerView;
     private LinearLayout mLayError;
     private TextView mTxtDataMsg;
-    private LinearLayoutManager layoutManager;
 
-
-    private ArrayList<Resp_get_All_Notification_for_EveryOne.ResultEntity> resultEntityArrayList = new ArrayList<>();
-    private Adapter_GET_Method adapter_GETExample;
+    private ArrayList<Response_getUsers.DataEntity> resultEntityArrayList = new ArrayList<>();
+    private Adapter_GET_Method adapter_get_method;
 
 
     public GET_Method_Fragment() {
@@ -78,63 +65,13 @@ public class GET_Method_Fragment extends Base_Fragment implements RequestNotifie
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mContext = getContext();
-        preference_manager = new Preference_Manager(mContext);
         networkCall = new NetworkCall(mContext, this);
-
 
         if (((AppCompatActivity) getActivity()).getSupportActionBar() != null)
             ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("GET METHOD");
 
-
-        mIsLoading = false;
-        mIsLastPage = false;
-        mCurrentPage = 0;
-
-        /*Bundle bundle = this.getArguments();
-        if (bundle != null) {
-            apiKey = bundle.getString("key");
-        }*/
-
-
-        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-            }
-
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                if (dy > 0) {
-                    // number of visible items
-                    int visibleItemCount = layoutManager.getChildCount();
-                    // number of items in layout
-                    int totalItemCount = layoutManager.getItemCount();
-                    // the position of first visible item
-                    int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
-
-                    boolean isNotLoadingAndNotLastPage = !mIsLoading && !mIsLastPage;
-                    // flag if number of visible items is at the last
-                    boolean isAtLastItem = firstVisibleItemPosition + visibleItemCount >= totalItemCount;
-                    // validate non negative values
-                    boolean isValidFirstItem = firstVisibleItemPosition >= 0;
-                    // validate total items are more than possible visible items
-                    boolean totalIsMoreThanVisible = totalItemCount >= pageSize;
-                    // flag to know whether to load more
-                    boolean shouldLoadMore = isValidFirstItem && isAtLastItem && totalIsMoreThanVisible && isNotLoadingAndNotLastPage;
-
-                    if (shouldLoadMore) {
-                        skipPage = skipPage + pageSize;
-                        callAPI(false, skipPage);
-                    }
-                }
-            }
-        });
-
-
-        // load the first page
-        adapter_GETExample.getList().clear();
-        callAPI(true, skipPage);
+        adapter_get_method.getList().clear();
+        callAPI(mContext);
 
 
     }
@@ -150,15 +87,9 @@ public class GET_Method_Fragment extends Base_Fragment implements RequestNotifie
     private void setUpRecycler() {
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        layoutManager = new LinearLayoutManager(getContext());
-        layoutManager.setSmoothScrollbarEnabled(true);
-        mRecyclerView.setLayoutManager(layoutManager);
-
-//        mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
-//        mRecyclerView.setLayoutManager(new GridLayoutManager(context, 4));
-
-        adapter_GETExample = new Adapter_GET_Method(getContext(), resultEntityArrayList, this);
-        mRecyclerView.setAdapter(adapter_GETExample);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
+        adapter_get_method = new Adapter_GET_Method(getContext(), resultEntityArrayList, this);
+        mRecyclerView.setAdapter(adapter_get_method);
     }
 
     @Override
@@ -166,81 +97,45 @@ public class GET_Method_Fragment extends Base_Fragment implements RequestNotifie
         super.onResume();
     }
 
-    private void callAPI(boolean isFirstPage, int skip) {
-        this.isFirstPage = isFirstPage;
-
-        // change loading state
-        mIsLoading = true;
-        networkCall.get_All_Notification_for_EveryOne("5f9cfb354fe2dc022c1137ed", "customer", loadPage, skip);
+    private void callAPI(Context mContext) {
+        ProgressView.show(getContext());
+        networkCall.getUsers();
     }
 
     @Override
     public void notifySuccess(Response<?> response) {
 
-        if (response.body() instanceof Resp_get_All_Notification_for_EveryOne) {
-            Resp_get_All_Notification_for_EveryOne pendingOrdersForSeller = (Resp_get_All_Notification_for_EveryOne) response.body();
+        if (response.body() instanceof Response_getUsers) {
+            Response_getUsers response_getUsers = (Response_getUsers) response.body();
             resultEntityArrayList.clear();
-            if (pendingOrdersForSeller != null) {
-                if (pendingOrdersForSeller.getResult() != null) {
-                    if (pendingOrdersForSeller.getResult().size() > 0) {
-                        if (!pendingOrdersForSeller.getResult().isEmpty()) {
-
-                            mMainLay.setVisibility(View.VISIBLE);
-                            mLayError.setVisibility(View.GONE);
-
-                            for (Resp_get_All_Notification_for_EveryOne.ResultEntity success : pendingOrdersForSeller.getResult()) {
+            ProgressView.dismiss();
+            if (response_getUsers != null) {
+                if (response_getUsers.getData() != null) {
+                    if (response_getUsers.getData().size() > 0) {
+                        if (!response_getUsers.getData().isEmpty()) {
+                            for (Response_getUsers.DataEntity success : response_getUsers.getData()) {
                                 success.setId(success.getId());
                                 resultEntityArrayList.add(success);
                             }
 
-                            if (isFirstPage) {
-                                adapter_GETExample.setList(resultEntityArrayList);
-                            } else {
-                                adapter_GETExample.addAll(resultEntityArrayList);
-                            }
-
-
-                            Log.d(TAG, "notifySuccess: resultEntityArrayList--->" + resultEntityArrayList.size());
-
-                            mIsLoading = false;
-                            mIsLastPage = mCurrentPage == 100;
-                            mCurrentPage = mCurrentPage + 1;
-
-                        }
-                    } else {
-
-                        if (isFirstPage) {
-                            mLayError.setVisibility(View.VISIBLE);
-                            mTxtDataMsg.setText(getResources().getString(R.string.no_data_found));
-
-                            mMainLay.setVisibility(View.GONE);
-                        } else {
                             mMainLay.setVisibility(View.VISIBLE);
                             mLayError.setVisibility(View.GONE);
+                            adapter_get_method.setList(resultEntityArrayList);
                         }
-                    }
-                } else {
-                    if (isFirstPage) {
+                    } else {
                         mLayError.setVisibility(View.VISIBLE);
                         mTxtDataMsg.setText(getResources().getString(R.string.no_data_found));
-
                         mMainLay.setVisibility(View.GONE);
-                    } else {
-                        mMainLay.setVisibility(View.VISIBLE);
-                        mLayError.setVisibility(View.GONE);
                     }
-                }
-            } else {
-
-                if (isFirstPage) {
+                } else {
                     mLayError.setVisibility(View.VISIBLE);
                     mTxtDataMsg.setText(getResources().getString(R.string.no_data_found));
-
                     mMainLay.setVisibility(View.GONE);
-                } else {
-                    mMainLay.setVisibility(View.VISIBLE);
-                    mLayError.setVisibility(View.GONE);
                 }
+            } else {
+                mLayError.setVisibility(View.VISIBLE);
+                mTxtDataMsg.setText(getResources().getString(R.string.no_data_found));
+                mMainLay.setVisibility(View.GONE);
             }
         }
 
@@ -252,15 +147,9 @@ public class GET_Method_Fragment extends Base_Fragment implements RequestNotifie
     public void notifyNoInternet() {
         ProgressView.dismiss();
         AppAlert._noInternetAlert(mContext);
-        if (isFirstPage) {
-            mLayError.setVisibility(View.VISIBLE);
-            mTxtDataMsg.setText(getResources().getString(R.string.no_data_found));
-
-            mMainLay.setVisibility(View.GONE);
-        } else {
-            mMainLay.setVisibility(View.VISIBLE);
-            mLayError.setVisibility(View.GONE);
-        }
+        mLayError.setVisibility(View.VISIBLE);
+        mTxtDataMsg.setText(getResources().getString(R.string.no_data_found));
+        mMainLay.setVisibility(View.GONE);
 
     }
 
@@ -269,40 +158,24 @@ public class GET_Method_Fragment extends Base_Fragment implements RequestNotifie
         Log.d(TAG, "notifyError: throwable--->" + throwable.getMessage());
         ProgressView.dismiss();
         AppAlert.callError(mContext);
-        if (isFirstPage) {
-            mLayError.setVisibility(View.VISIBLE);
-            mTxtDataMsg.setText("No Data Found....!");
-
-            mMainLay.setVisibility(View.GONE);
-        } else {
-            mMainLay.setVisibility(View.VISIBLE);
-            mLayError.setVisibility(View.GONE);
-        }
-
+        mLayError.setVisibility(View.VISIBLE);
+        mTxtDataMsg.setText(getResources().getString(R.string.no_data_found));
+        mMainLay.setVisibility(View.GONE);
     }
 
     @Override
     public void notifyString(String s) {
         ProgressView.dismiss();
-        if (isFirstPage) {
-            mLayError.setVisibility(View.VISIBLE);
-            mTxtDataMsg.setText("No Data Found....!");
-
-            mMainLay.setVisibility(View.GONE);
-        } else {
-            mMainLay.setVisibility(View.VISIBLE);
-            mLayError.setVisibility(View.GONE);
-        }
-        AppAlert.callAlert(mContext, s);
-
+        mLayError.setVisibility(View.VISIBLE);
+        mTxtDataMsg.setText(getResources().getString(R.string.no_data_found));
+        mMainLay.setVisibility(View.GONE);
     }
 
 
     @Override
-    public void openNotificationId(Resp_get_All_Notification_for_EveryOne.ResultEntity entity) {
+    public void openNotificationId(Response_getUsers.DataEntity entity) {
 
         Log.d(TAG, "openNotificationId: DATADTADAT-->" + entity.getId());
-
         /*startActivity(new Intent(mContext, Product_Order_InFo_Activity.class).
                 putExtra("orderID", App_Utils.removeFirstChar(App_Utils.removeLastChar(entity.getValue())))
                 .putExtra("notificationID", entity.getId()).

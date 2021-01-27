@@ -52,10 +52,10 @@ public class Open_Fragment_Activity extends Base_Activity {
 
         switch (fragmentKey) {
             case "GET_Method_Fragment":
-                mFragment = new GET_Method_Fragment();
+                /*mFragment = new GET_Method_Fragment();
                 bundle.putString("productID", "productID");
-                mFragment.setArguments(bundle);
-                setFragment(R.id.fragment_container, mFragment, false);
+                mFragment.setArguments(bundle);*/
+                setFragment(R.id.fragment_container, new GET_Method_Fragment(), false);
                 break;
 
 

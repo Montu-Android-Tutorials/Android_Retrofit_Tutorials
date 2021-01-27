@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.android_retrofit_tutorials.R;
 import com.app.android_retrofit_tutorials.app_model.Resp_get_All_Notification_for_EveryOne;
+import com.app.android_retrofit_tutorials.app_model.Response_getUsers;
 import com.google.android.material.textview.MaterialTextView;
 
 import java.util.List;
@@ -22,14 +23,14 @@ public class Adapter_GET_Method extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     public String TAG = Adapter_GET_Method.class.getSimpleName();
 
-    private List<Resp_get_All_Notification_for_EveryOne.ResultEntity> resultEntities;
+    private List<Response_getUsers.DataEntity> resultEntities;
     private Context mContext;
 
     int lastPosition = -1;
 
     OpenNotificationId openNotificationId;
 
-    public Adapter_GET_Method(Context context, List<Resp_get_All_Notification_for_EveryOne.ResultEntity> resultEntities,
+    public Adapter_GET_Method(Context context, List<Response_getUsers.DataEntity> resultEntities,
                               OpenNotificationId openNotificationId) {
         this.resultEntities = resultEntities;
         this.mContext = context;
@@ -57,7 +58,7 @@ public class Adapter_GET_Method extends RecyclerView.Adapter<RecyclerView.ViewHo
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder1, int position) {
 
         MyViewHolder holder = (MyViewHolder) holder1;
-        Resp_get_All_Notification_for_EveryOne.ResultEntity entity = resultEntities.get(position);
+        Response_getUsers.DataEntity entity = resultEntities.get(position);
 
 
 
@@ -68,26 +69,17 @@ public class Adapter_GET_Method extends RecyclerView.Adapter<RecyclerView.ViewHo
         lastPosition = position;
 
 
-        holder.mTxtNotifTitle.setText(entity.getTitle() + " " + entity.getKey());
-        holder.mTxtMessage.setText(entity.getBody());
+        holder.mTxtNotifTitle.setText(entity.getFirstName() + " " + entity.getLastName());
+        holder.mTxtMessage.setText(entity.getEmail());
 
-        if (entity.isSeen()) {
-            holder.mMainCard.setBackgroundColor(Color.parseColor("#EEEEEE"));
-        } else {
-            holder.mMainCard.setBackgroundColor(Color.parseColor("#FFFFFF"));
-        }
-
-//        holder.mTxtDate.setText(App_Utils.convertDate(entity.getNotifytime()));
-
-
-        holder.mMainCard.setOnClickListener(new View.OnClickListener() {
+       /* holder.mMainCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 holder.mMainCard.setBackgroundColor(Color.parseColor("#ECEFF1"));
                 openNotificationId.openNotificationId(entity);
 
             }
-        });
+        });*/
 
     }
 
@@ -111,20 +103,20 @@ public class Adapter_GET_Method extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
 
-    public void addAll(List<Resp_get_All_Notification_for_EveryOne.ResultEntity> newList) {
+    public void addAll(List<Response_getUsers.DataEntity> newList) {
         int lastIndex = resultEntities.size() /*- 1*/;
         resultEntities.addAll(newList);
         notifyItemRangeInserted(lastIndex, newList.size());
     }
 
-    public List<Resp_get_All_Notification_for_EveryOne.ResultEntity> getList() {
+    public List<Response_getUsers.DataEntity> getList() {
         return this.resultEntities;
     }
 
 
     ///Todo Pagination
 
-    public void setList(List<Resp_get_All_Notification_for_EveryOne.ResultEntity> list) {
+    public void setList(List<Response_getUsers.DataEntity> list) {
         this.resultEntities = list;
         notifyDataSetChanged();
     }
@@ -148,7 +140,7 @@ public class Adapter_GET_Method extends RecyclerView.Adapter<RecyclerView.ViewHo
 
 
     public interface OpenNotificationId {
-        public void  openNotificationId(Resp_get_All_Notification_for_EveryOne.ResultEntity entity);
+        public void  openNotificationId(Response_getUsers.DataEntity entity);
     }
 
 }

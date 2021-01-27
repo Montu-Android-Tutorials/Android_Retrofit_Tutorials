@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 
 import com.app.android_retrofit_tutorials.app_constants.Web_Contants;
 import com.app.android_retrofit_tutorials.app_model.Resp_get_All_Notification_for_EveryOne;
+import com.app.android_retrofit_tutorials.app_model.Response_getUsers;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -86,7 +87,7 @@ public class NetworkCall {
     }
 
 
-    public void get_All_Notification_for_EveryOne(String id, String key, int limit, int skip) {
+    public void getUsers() {
         try {
             Retrofit mRetrofit = new Retrofit.Builder()
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
@@ -96,10 +97,10 @@ public class NetworkCall {
                     .build();
 
             NetworkServiceApi serviceApi = mRetrofit.create(NetworkServiceApi.class);
-            Call<Resp_get_All_Notification_for_EveryOne> call = serviceApi.get_All_Notification_for_EveryOne(key, id, key, limit, skip);
-            call.enqueue(new Callback<Resp_get_All_Notification_for_EveryOne>() {
+            Call<Response_getUsers> call = serviceApi.getUsers();
+            call.enqueue(new Callback<Response_getUsers>() {
                 @Override
-                public void onResponse(@NonNull Call<Resp_get_All_Notification_for_EveryOne> call, @NonNull Response<Resp_get_All_Notification_for_EveryOne> response) {
+                public void onResponse(@NonNull Call<Response_getUsers> call, @NonNull Response<Response_getUsers> response) {
 
                     if (response.code() == 200)
                         mNotifier.notifySuccess(response);
@@ -109,14 +110,14 @@ public class NetworkCall {
                 }
 
                 @Override
-                public void onFailure(@NonNull Call<Resp_get_All_Notification_for_EveryOne> call, @NonNull Throwable t) {
-                    Log.e("API_Error  ", "Error Resp_get_All_Notification_for_EveryOne " + t.getMessage());
+                public void onFailure(@NonNull Call<Response_getUsers> call, @NonNull Throwable t) {
+                    Log.e("API_Error  ", "Error Response_getUsers " + t.getMessage());
 
                     mNotifier.notifyError(t);
                 }
             });
         } catch (Exception e) {
-            Log.e("JSSOOONNN  ", "Error Resp_get_All_Notification_for_EveryOne " + e.getMessage());
+            Log.e("JSSOOONNN  ", "Error Response_getUsers " + e.getMessage());
 
             e.printStackTrace();
         }
