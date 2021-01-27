@@ -15,7 +15,6 @@ import com.google.android.material.appbar.AppBarLayout;
 
 public class Open_Fragment_Activity extends Base_Activity {
     private String TAG = Open_Fragment_Activity.class.getSimpleName();
-    private String fragmentKey;
     private Fragment mFragment;
 
 
@@ -23,13 +22,19 @@ public class Open_Fragment_Activity extends Base_Activity {
     private Toolbar mToolbar;
     private FrameLayout mFragmentContainer;
 
+    private String fragmentKey;
+    private String restOpr;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_open_fragment);
 
         fragmentKey = getIntent().getStringExtra("fragmentKey");
+        restOpr = getIntent().getStringExtra("restOpr");
+
         Log.d(TAG, "onCreate: fragmentKey--->" + fragmentKey);
+        Log.d(TAG, "restOpr" + restOpr);
 
         initView();
 
@@ -52,10 +57,10 @@ public class Open_Fragment_Activity extends Base_Activity {
 
         switch (fragmentKey) {
             case "GET_Method_Fragment":
-                /*mFragment = new GET_Method_Fragment();
-                bundle.putString("productID", "productID");
-                mFragment.setArguments(bundle);*/
-                setFragment(R.id.fragment_container, new GET_Method_Fragment(), false);
+                mFragment = new GET_Method_Fragment();
+                bundle.putString("restOpr", restOpr);
+                mFragment.setArguments(bundle);
+                setFragment(R.id.fragment_container, mFragment, false);
                 break;
 
 

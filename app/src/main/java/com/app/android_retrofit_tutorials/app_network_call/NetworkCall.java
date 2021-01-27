@@ -9,7 +9,6 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.app.android_retrofit_tutorials.app_constants.Web_Contants;
-import com.app.android_retrofit_tutorials.app_model.Resp_get_All_Notification_for_EveryOne;
 import com.app.android_retrofit_tutorials.app_model.Response_getUsers;
 
 import java.io.IOException;
