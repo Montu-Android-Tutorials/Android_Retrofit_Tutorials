@@ -2,6 +2,15 @@ package com.app.android_retrofit_tutorials.app_ui.app_fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,15 +18,9 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.app.android_retrofit_tutorials.R;
 import com.app.android_retrofit_tutorials.app_adapter.Adapter_GET_Method;
+import com.app.android_retrofit_tutorials.app_adapter.Adapter_GET_Method_Params;
 import com.app.android_retrofit_tutorials.app_base.Base_Fragment;
 import com.app.android_retrofit_tutorials.app_model.Response_getUsers;
 import com.app.android_retrofit_tutorials.app_network_call.NetworkCall;
@@ -29,11 +32,10 @@ import java.util.ArrayList;
 
 import retrofit2.Response;
 
+public class GET_Method_Params_Fragment extends Base_Fragment implements RequestNotifier, Adapter_GET_Method_Params.OpenUserInfo{
 
-public class GET_Method_Fragment extends Base_Fragment implements RequestNotifier{
 
-
-    private String TAG = GET_Method_Fragment.class.getSimpleName();
+    private String TAG = GET_Method_Params_Fragment.class.getSimpleName();
     private NetworkCall networkCall;
     private Context mContext;
 
@@ -43,10 +45,10 @@ public class GET_Method_Fragment extends Base_Fragment implements RequestNotifie
     private TextView mTxtDataMsg;
 
     private ArrayList<Response_getUsers.DataEntity> resultEntityArrayList = new ArrayList<>();
-    private Adapter_GET_Method adapter_get_method;
+    private Adapter_GET_Method_Params adapter_get_method_params;
 
 
-    public GET_Method_Fragment() {
+    public GET_Method_Params_Fragment() {
         // Required empty public constructor
     }
 
@@ -55,7 +57,7 @@ public class GET_Method_Fragment extends Base_Fragment implements RequestNotifie
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_get_method, container, false);
+        View view = inflater.inflate(R.layout.fragment_get_method_params, container, false);
         initView(view);
         return view;
     }
@@ -70,7 +72,7 @@ public class GET_Method_Fragment extends Base_Fragment implements RequestNotifie
         if (((AppCompatActivity) getActivity()).getSupportActionBar() != null)
             ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("GET METHOD");
 
-        adapter_get_method.getList().clear();
+        adapter_get_method_params.getList().clear();
         callAPI(mContext);
 
 
@@ -88,8 +90,8 @@ public class GET_Method_Fragment extends Base_Fragment implements RequestNotifie
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
-        adapter_get_method = new Adapter_GET_Method(getContext(), resultEntityArrayList);
-        mRecyclerView.setAdapter(adapter_get_method);
+        adapter_get_method_params = new Adapter_GET_Method_Params(getContext(), resultEntityArrayList, this);
+        mRecyclerView.setAdapter(adapter_get_method_params);
     }
 
     @Override
@@ -120,7 +122,7 @@ public class GET_Method_Fragment extends Base_Fragment implements RequestNotifie
 
                             mMainLay.setVisibility(View.VISIBLE);
                             mLayError.setVisibility(View.GONE);
-                            adapter_get_method.setList(resultEntityArrayList);
+                            adapter_get_method_params.setList(resultEntityArrayList);
                         }
                     } else {
                         mLayError.setVisibility(View.VISIBLE);
@@ -172,4 +174,8 @@ public class GET_Method_Fragment extends Base_Fragment implements RequestNotifie
     }
 
 
+    @Override
+    public void _userInfo(Response_getUsers.DataEntity entity) {
+        Log.d(TAG, "_userInfo: UserIIIDDD---->"+entity.getId());
+    }
 }

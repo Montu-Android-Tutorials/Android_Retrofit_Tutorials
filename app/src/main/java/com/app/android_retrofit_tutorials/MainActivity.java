@@ -58,8 +58,12 @@ public class MainActivity extends Base_Activity {
         switch (strOperations) {
             case "GET METHOD":
                 startActivity(new Intent(this, Open_Fragment_Activity.class)
-                        .putExtra("fragmentKey", "GET_Method_Fragment")
-                        .putExtra("restOpr", "SimpleGET"));
+                        .putExtra("fragmentKey", "GET_Method_Fragment"));
+                break;
+
+            case "GET METHOD with PARAMETER":
+                startActivity(new Intent(this, Open_Fragment_Activity.class)
+                        .putExtra("fragmentKey", "GET_Method_Params_Fragment"));
                 break;
         }
     }

@@ -1,13 +1,13 @@
 package com.app.android_retrofit_tutorials.app_adapter;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -21,18 +21,20 @@ import com.google.android.material.textview.MaterialTextView;
 
 import java.util.List;
 
-public class Adapter_GET_Method extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class Adapter_GET_Method_Params extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    public String TAG = Adapter_GET_Method.class.getSimpleName();
+    public String TAG = Adapter_GET_Method_Params.class.getSimpleName();
 
     private List<Response_getUsers.DataEntity> resultEntities;
     private Context mContext;
     private int lastPosition = -1;
 
+    private OpenUserInfo openUserInfo;
 
-    public Adapter_GET_Method(Context context, List<Response_getUsers.DataEntity> resultEntities) {
+    public Adapter_GET_Method_Params(Context context, List<Response_getUsers.DataEntity> resultEntities, OpenUserInfo openUserInfo) {
         this.resultEntities = resultEntities;
         this.mContext = context;
+        this.openUserInfo = openUserInfo;
     }
 
 
@@ -45,7 +47,7 @@ public class Adapter_GET_Method extends RecyclerView.Adapter<RecyclerView.ViewHo
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view;
-        view = LayoutInflater.from(mContext).inflate(R.layout.item_users_list, parent, false);
+        view = LayoutInflater.from(mContext).inflate(R.layout.item_users_list_params, parent, false);
         return new MyViewHolder(view);
     }
 
@@ -61,10 +63,8 @@ public class Adapter_GET_Method extends RecyclerView.Adapter<RecyclerView.ViewHo
         holder.itemView.startAnimation(animation);
         lastPosition = position;
 
-
         holder.mTxtUserName.setText(entity.getFirstName() + " " + entity.getLastName());
         holder.mTxtUserEmail.setText(entity.getEmail());
-
 
         if (entity.getAvatar() != null) {
             Glide.with(mContext)
@@ -74,8 +74,14 @@ public class Adapter_GET_Method extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
 
 
-    }
+        holder.mTxtGetUserInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openUserInfo._userInfo(entity);
+            }
+        });
 
+    }
 
 
     //ViewHolder Class
@@ -84,14 +90,19 @@ public class Adapter_GET_Method extends RecyclerView.Adapter<RecyclerView.ViewHo
         private ImageView mIvUserProfile;
         private MaterialTextView mTxtUserName;
         private MaterialTextView mTxtUserEmail;
+        private TextView mTxtGetUserInfo;
+
         public MyViewHolder(View view) {
             super(view);
             mMainCard = view.findViewById(R.id.mainCard);
             mIvUserProfile = view.findViewById(R.id.ivUserProfile);
             mTxtUserName = view.findViewById(R.id.txtUserName);
             mTxtUserEmail = view.findViewById(R.id.txtUserEmail);
+            mTxtGetUserInfo = view.findViewById(R.id.txtGetUserInfo);
         }
     }
+
+
 
 
     public List<Response_getUsers.DataEntity> getList() {
@@ -107,7 +118,6 @@ public class Adapter_GET_Method extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
 
-
     //Animate
     @Override
     public void onViewDetachedFromWindow(@NonNull RecyclerView.ViewHolder holder) {
@@ -115,5 +125,9 @@ public class Adapter_GET_Method extends RecyclerView.Adapter<RecyclerView.ViewHo
         holder.itemView.clearAnimation();
     }
 
+
+    public interface OpenUserInfo {
+        void _userInfo(Response_getUsers.DataEntity entity);
+    }
 
 }
