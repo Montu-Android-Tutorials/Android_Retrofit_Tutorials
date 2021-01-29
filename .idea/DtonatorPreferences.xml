@@ -15,7 +15,6 @@
     <option name="naming">
       <list>
         <option value="CAMEL_CASE" />
-        <option value="PREFEIX" />
       </list>
     </option>
   </component>

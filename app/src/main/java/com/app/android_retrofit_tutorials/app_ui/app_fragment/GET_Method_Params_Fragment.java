@@ -1,38 +1,44 @@
 package com.app.android_retrofit_tutorials.app_ui.app_fragment;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.app.android_retrofit_tutorials.R;
-import com.app.android_retrofit_tutorials.app_adapter.Adapter_GET_Method;
 import com.app.android_retrofit_tutorials.app_adapter.Adapter_GET_Method_Params;
 import com.app.android_retrofit_tutorials.app_base.Base_Fragment;
+import com.app.android_retrofit_tutorials.app_model.Resp_getUsersWithID;
 import com.app.android_retrofit_tutorials.app_model.Response_getUsers;
 import com.app.android_retrofit_tutorials.app_network_call.NetworkCall;
 import com.app.android_retrofit_tutorials.app_network_call.RequestNotifier;
 import com.app.android_retrofit_tutorials.app_utills.AppAlert;
 import com.app.android_retrofit_tutorials.app_utills.ProgressView;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.textview.MaterialTextView;
 
 import java.util.ArrayList;
 
 import retrofit2.Response;
 
-public class GET_Method_Params_Fragment extends Base_Fragment implements RequestNotifier, Adapter_GET_Method_Params.OpenUserInfo{
+public class GET_Method_Params_Fragment extends Base_Fragment implements RequestNotifier, Adapter_GET_Method_Params.OpenUserInfo {
 
 
     private String TAG = GET_Method_Params_Fragment.class.getSimpleName();
@@ -46,6 +52,15 @@ public class GET_Method_Params_Fragment extends Base_Fragment implements Request
 
     private ArrayList<Response_getUsers.DataEntity> resultEntityArrayList = new ArrayList<>();
     private Adapter_GET_Method_Params adapter_get_method_params;
+
+
+    //Todo Logout
+    private BottomSheetDialog logoutBottomSheet;
+    private ImageView mIvUserProfile;
+    private MaterialTextView mTxtUserName;
+    private MaterialTextView mTxtUserEmail;
+    private MaterialTextView mTxtInfo;
+    private AppCompatButton mBtnClose;
 
 
     public GET_Method_Params_Fragment() {
@@ -70,7 +85,7 @@ public class GET_Method_Params_Fragment extends Base_Fragment implements Request
         networkCall = new NetworkCall(mContext, this);
 
         if (((AppCompatActivity) getActivity()).getSupportActionBar() != null)
-            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("GET METHOD");
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("GET With PARAM's");
 
         adapter_get_method_params.getList().clear();
         callAPI(mContext);
@@ -142,6 +157,18 @@ public class GET_Method_Params_Fragment extends Base_Fragment implements Request
         }
 
 
+
+        if (response.body() instanceof Resp_getUsersWithID) {
+            Resp_getUsersWithID resp_getUsersWithID = (Resp_getUsersWithID) response.body();
+            ProgressView.dismiss();
+            if (resp_getUsersWithID.getData() != null){
+                _userInfo(mContext, resp_getUsersWithID);
+            }else {
+                AppAlert.callNotamlAlert(mContext, "Error", "Please Try Again...!");
+            }
+        }
+
+
     }
 
 
@@ -176,6 +203,62 @@ public class GET_Method_Params_Fragment extends Base_Fragment implements Request
 
     @Override
     public void _userInfo(Response_getUsers.DataEntity entity) {
-        Log.d(TAG, "_userInfo: UserIIIDDD---->"+entity.getId());
+        Log.d(TAG, "_userInfo: UserIIIDDD---->" + entity.getId());
+        ProgressView.show(mContext);
+        networkCall.getUsersWithID(entity.getId());
+    }
+
+
+    private void _userInfo(Context context, Resp_getUsersWithID entity) {
+        logoutBottomSheet = new BottomSheetDialog(context, R.style.TransparentDialog);
+        View dialogView = getLayoutInflater().inflate(R.layout.bottom_sheet_user_info, null);
+
+        logoutBottomSheet.setContentView(dialogView);
+        logoutBottomSheet.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialog) {
+                BottomSheetDialog d = (BottomSheetDialog) dialog;
+                View bottomSheetInternal = d.findViewById(com.google.android.material.R.id.design_bottom_sheet);
+                BottomSheetBehavior.from(bottomSheetInternal).setState(BottomSheetBehavior.STATE_EXPANDED);
+            }
+        });
+
+
+        mIvUserProfile = dialogView.findViewById(R.id.ivUserProfile);
+        mTxtUserName = dialogView.findViewById(R.id.txtUserName);
+        mTxtUserEmail = dialogView.findViewById(R.id.txtUserEmail);
+        mTxtInfo = dialogView.findViewById(R.id.txtInfo);
+        mBtnClose = dialogView.findViewById(R.id.btnClose);
+
+        if (entity.getData() != null) {
+            mTxtUserName.setText(new StringBuilder()
+                    .append(entity.getData().getFirstName())
+                    .append(" ")
+                    .append(entity.getData().getLastName()).toString());
+
+            mTxtUserEmail.setText(entity.getData().getEmail());
+            if (entity.getData().getAvatar() != null) {
+                Glide.with(mContext)
+                        .load(entity.getData().getAvatar())
+                        .apply(new RequestOptions().placeholder(R.mipmap.ic_launcher).error(R.mipmap.ic_launcher))
+                        .into(mIvUserProfile);
+            }
+        }
+
+
+        if (entity.getSupport() != null) {
+            mTxtInfo.setText(entity.getSupport().getText());
+
+
+            mBtnClose.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    logoutBottomSheet.dismiss();
+                }
+            });
+
+            logoutBottomSheet.show();
+        }
+
     }
 }

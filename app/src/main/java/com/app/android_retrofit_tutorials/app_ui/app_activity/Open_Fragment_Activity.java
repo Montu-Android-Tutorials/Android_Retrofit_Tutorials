@@ -54,7 +54,6 @@ public class Open_Fragment_Activity extends Base_Activity {
         mFragment = new GET_Method_Fragment();
         bundle.putString("restOpr", restOpr);
         mFragment.setArguments(bundle);*/
-
         switch (fragmentKey) {
             case "GET_Method_Fragment":
                 setFragment(R.id.fragment_container, new GET_Method_Fragment(), false);

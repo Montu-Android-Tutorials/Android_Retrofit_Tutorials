@@ -9,6 +9,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.app.android_retrofit_tutorials.app_constants.Web_Contants;
+import com.app.android_retrofit_tutorials.app_model.Resp_getUsersWithID;
 import com.app.android_retrofit_tutorials.app_model.Response_getUsers;
 
 import java.io.IOException;
@@ -121,6 +122,48 @@ public class NetworkCall {
             e.printStackTrace();
         }
     }
+
+
+
+
+    public void getUsersWithID(int id) {
+        try {
+            Retrofit mRetrofit = new Retrofit.Builder()
+                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                    .client(initHttpClient().build())
+                    .baseUrl(Web_Contants._baseURl)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+
+            NetworkServiceApi serviceApi = mRetrofit.create(NetworkServiceApi.class);
+            Call<Resp_getUsersWithID> call = serviceApi.getUsersWithID(id);
+            call.enqueue(new Callback<Resp_getUsersWithID>() {
+                @Override
+                public void onResponse(@NonNull Call<Resp_getUsersWithID> call, @NonNull Response<Resp_getUsersWithID> response) {
+
+                    if (response.code() == 200)
+                        mNotifier.notifySuccess(response);
+                    else
+                        mNotifier.notifyString("Something Went Wrong Please Try Again....!!!");
+
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<Resp_getUsersWithID> call, @NonNull Throwable t) {
+                    Log.e("API_Error  ", "Error Resp_getUsersWithID " + t.getMessage());
+
+                    mNotifier.notifyError(t);
+                }
+            });
+        } catch (Exception e) {
+            Log.e("JSSOOONNN  ", "Error Resp_getUsersWithID " + e.getMessage());
+
+            e.printStackTrace();
+        }
+    }
+
+
+
 
 
 }
