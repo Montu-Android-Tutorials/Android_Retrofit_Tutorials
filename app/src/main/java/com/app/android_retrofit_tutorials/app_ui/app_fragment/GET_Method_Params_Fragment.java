@@ -55,7 +55,7 @@ public class GET_Method_Params_Fragment extends Base_Fragment implements Request
 
 
     //Todo Logout
-    private BottomSheetDialog logoutBottomSheet;
+    private BottomSheetDialog infoBottomSheet;
     private ImageView mIvUserProfile;
     private MaterialTextView mTxtUserName;
     private MaterialTextView mTxtUserEmail;
@@ -164,7 +164,7 @@ public class GET_Method_Params_Fragment extends Base_Fragment implements Request
             if (resp_getUsersWithID.getData() != null){
                 _userInfo(mContext, resp_getUsersWithID);
             }else {
-                AppAlert.callNotamlAlert(mContext, "Error", "Please Try Again...!");
+                AppAlert.callNotamlAlert(mContext, "Error", "Something Went Wrong Please Try Again....!!!");
             }
         }
 
@@ -210,11 +210,11 @@ public class GET_Method_Params_Fragment extends Base_Fragment implements Request
 
 
     private void _userInfo(Context context, Resp_getUsersWithID entity) {
-        logoutBottomSheet = new BottomSheetDialog(context, R.style.TransparentDialog);
+        infoBottomSheet = new BottomSheetDialog(context, R.style.TransparentDialog);
         View dialogView = getLayoutInflater().inflate(R.layout.bottom_sheet_user_info, null);
 
-        logoutBottomSheet.setContentView(dialogView);
-        logoutBottomSheet.setOnShowListener(new DialogInterface.OnShowListener() {
+        infoBottomSheet.setContentView(dialogView);
+        infoBottomSheet.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface dialog) {
                 BottomSheetDialog d = (BottomSheetDialog) dialog;
@@ -253,11 +253,11 @@ public class GET_Method_Params_Fragment extends Base_Fragment implements Request
             mBtnClose.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    logoutBottomSheet.dismiss();
+                    infoBottomSheet.dismiss();
                 }
             });
 
-            logoutBottomSheet.show();
+            infoBottomSheet.show();
         }
 
     }

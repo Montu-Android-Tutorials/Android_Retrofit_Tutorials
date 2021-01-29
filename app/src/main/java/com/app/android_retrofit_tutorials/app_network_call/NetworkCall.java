@@ -10,7 +10,9 @@ import androidx.annotation.NonNull;
 
 import com.app.android_retrofit_tutorials.app_constants.Web_Contants;
 import com.app.android_retrofit_tutorials.app_model.Resp_getUsersWithID;
+import com.app.android_retrofit_tutorials.app_model.Resp_postUserJob;
 import com.app.android_retrofit_tutorials.app_model.Response_getUsers;
+import com.google.gson.JsonObject;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -162,6 +164,44 @@ public class NetworkCall {
         }
     }
 
+
+
+
+    public void postUserJob(JsonObject jsonObject) {
+        try {
+            Retrofit mRetrofit = new Retrofit.Builder()
+                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                    .client(initHttpClient().build())
+                    .baseUrl(Web_Contants._baseURl)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+
+            NetworkServiceApi serviceApi = mRetrofit.create(NetworkServiceApi.class);
+            Call<Resp_postUserJob> call = serviceApi.postUserJob(jsonObject);
+            call.enqueue(new Callback<Resp_postUserJob>() {
+                @Override
+                public void onResponse(@NonNull Call<Resp_postUserJob> call, @NonNull Response<Resp_postUserJob> response) {
+
+                    if (response.code() == 200)
+                        mNotifier.notifySuccess(response);
+                    else
+                        mNotifier.notifyString("Something Went Wrong Please Try Again....!!!");
+
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<Resp_postUserJob> call, @NonNull Throwable t) {
+                    Log.e("API_Error  ", "Error Resp_postUserJob " + t.getMessage());
+
+                    mNotifier.notifyError(t);
+                }
+            });
+        } catch (Exception e) {
+            Log.e("JSSOOONNN  ", "Error Resp_postUserJob " + e.getMessage());
+
+            e.printStackTrace();
+        }
+    }
 
 
 
